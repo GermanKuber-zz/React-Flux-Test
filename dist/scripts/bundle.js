@@ -45914,7 +45914,7 @@ var ManageAuthorPage = React.createClass({displayName: "ManageAuthorPage",
 		if (!this.authorFormIsValid()) {
 			return;
 		}
-
+		
 		if (this.state.author.id) {
 			AuthorActions.updateAuthor(this.state.author);
 		} else {
@@ -46199,7 +46199,7 @@ var CoursesList = React.createClass({displayName: "CoursesList",
 				React.createElement("tr", {key: course.id}, 
 					React.createElement("td", null, React.createElement("a", {href: course.watchHref}, "Watch")), 
 					React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteCourse.bind(this, course.id)}, "Delete")), 
-					React.createElement("td", null, React.createElement(Link, {to: "manageCourse", params: {id: course.id}}, course.id)), 
+					React.createElement("td", null, React.createElement(Link, {to: "manageCourse", params: {id: course.id}}, course.title)), 
 					React.createElement("td", null, course.author.name), 
 					React.createElement("td", null, course.category), 
 					React.createElement("td", null, course.length)
@@ -46255,12 +46255,11 @@ var ManageCoursePage = React.createClass({displayName: "ManageCoursePage",
 
 	getInitialState: function () {
 		var state = {
-			course: { id: '', firstName: '', lastName: '' },
+			course: {},
 			authors: AuthorStore.getAllAuthors(),
 			errors: {},
 			dirty: false
 		};
-		console.log(state);
 		return state;
 	},
 
@@ -46278,8 +46277,15 @@ var ManageCoursePage = React.createClass({displayName: "ManageCoursePage",
 		this.state.course[field] = value;
 		return this.setState({ course: this.state.course });
 	},
-	changeAuthor: function (author) {
-		console.log(author);
+	changeAuthor: function (authorId) {
+		this.setState(prevState => Object.assign({}, prevState, {
+			course: Object.assign({}, prevState.course, {
+				author: Object.assign({}, prevState.course.author, {
+					id: authorId
+				})
+			})
+		}));
+
 	},
 	courseFormIsValid: function () {
 		var formIsValid = true;
@@ -46302,10 +46308,9 @@ var ManageCoursePage = React.createClass({displayName: "ManageCoursePage",
 	saveCourse: function (event) {
 		event.preventDefault();
 
-		if (!this.courseFormIsValid()) {
-			return;
-		}
-
+	
+		console.log(this.state.course);
+		
 		if (this.state.course.id) {
 			CourseActions.updateCourse(this.state.course);
 		} else {
@@ -46314,7 +46319,7 @@ var ManageCoursePage = React.createClass({displayName: "ManageCoursePage",
 
 		this.setState({ dirty: false });
 		toastr.success('Course saved.');
-		this.transitionTo('course');
+		this.transitionTo('courses');
 	},
 
 	render: function () {
