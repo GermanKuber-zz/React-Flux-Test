@@ -27,6 +27,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "devDependencies": {
-    "eslint": "^4.9.0"
+    "eslint": "^4.9.0",
+    "gulp-sourcemaps": "^2.6.1"
   }
 }
